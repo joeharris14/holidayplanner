@@ -4,6 +4,7 @@
     <p class="errorMessage">{{ errorMessage }}</p>
     <div class="inputLabel"><p>How long is your vacation?</p></div>
     <input class="inputField" v-model="holidayLengthEntered" />
+    <select />
     <button class="calcButton" v-on:click="handleSubmitPress">Calculate best dates</button>
     <HolidayList />
   </div>
@@ -80,8 +81,11 @@ export default class HolidayPlanner extends Vue {
           leaveCost += 1;
         }
       }
-      
       const holiday = this.createHoliday(m, desiredLength, leaveCost);
+      // we've hit the end of the road for 2020, no point checking further
+      if (moment(holiday.endDay).isAfter(b)) {
+        break;
+      }
       if (leaveCost === minLeaveCost) {
           // add to list of equal best holiday options
           bestHolidayList.push(holiday);
@@ -110,7 +114,7 @@ export default class HolidayPlanner extends Vue {
   }
 
   createHoliday(startDay: Moment, length: number, leaveCost: number): Holiday {
-    const format = "ddd, DD MMM";
+    const format = "ddd, DD MMM YY";
     return { startDay: moment(startDay).format(format).toString(), endDay: moment(startDay).add(length - 1, "days").format(format).toString(), leaveCost: leaveCost }
   }
 
