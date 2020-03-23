@@ -1,18 +1,27 @@
 <template>
-  <div class="hello">
-    <h1>Enter a number between 4 and 20</h1>
-    <div class="inputBlock">
+  <div class="contentWrapper">
+    <h1>Holiday Planner</h1>
+    <div>
     <p class="errorMessage">{{ errorMessage }}</p>
-      <input v-model="holidayLengthEntered" />
+    <div class="inputWrapper">
+      <div class="inputLabel"><p>How long is your vacation?</p></div>
+      <input class="inputField" v-model="holidayLengthEntered" />
+      <button class="calcButton" v-on:click="handleSubmitPress">Calculate best dates</button>
+      </div>
     </div>
-    
-    <button v-on:click="handleSubmitPress">Calculate</button>
-    <p v-for="holiday in bestHolidays" :key="holiday.startDay">{{ holiday.startDay }} - {{ holiday.endDay }} ({{ holiday.leaveCost }} days off req)</p>
+    <transition name="slide-fade">
+    <div class="holidayItemWrapper" v-show="bestHolidays.length > 0">
+      <div class="holidayItem" v-for="(holiday, index) in bestHolidays" :key="holiday.startDay"><b>{{ holiday.startDay }} - {{ holiday.endDay }}</b>
+        <div class="subtitle"> {{ holiday.leaveCost }} days of annual leave</div>
+        <hr class="divider" v-if="index+1 < bestHolidays.length" />
+      </div>
+    </div>
+    </transition>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import moment, { Moment } from 'moment';
 import { Holiday } from '../types';
 import json from '../assets/public_holidays.json';
@@ -21,7 +30,6 @@ export default class HelloWorld extends Vue {
   holidayLengthEntered = "";
   errorMessage: string | null = null;
   daysOff: Moment[] = [];
-  @Prop() private msg!: string;
   bestHolidays: Array<Holiday> = [];
 
   mounted() {
@@ -35,6 +43,7 @@ export default class HelloWorld extends Vue {
   @Watch('holidayLengthEntered') inputEntered() {
     if (this.holidayLengthEntered.length === 0) {
       this.errorMessage = null;
+      this.bestHolidays = [];
     }
     // If you want real time input validation
 
@@ -51,7 +60,7 @@ export default class HelloWorld extends Vue {
     const desiredLength = parseInt(this.holidayLengthEntered);
     // set an error message to request the user enters a number
     if (isNaN(desiredLength) || desiredLength < 4 || desiredLength > 20) { 
-      this.errorMessage = "Please enter a valid number." 
+      this.errorMessage = "Please enter a valid number between 4 and 20." 
       return;
     } else {
       this.errorMessage = null;
@@ -63,7 +72,10 @@ export default class HelloWorld extends Vue {
     const dayOfWeek = dayToCheck.day();
     return dayOfWeek === 6 || dayOfWeek === 0 || this.daysOff.some((dayOff: Moment) => dayToCheck.isSame(dayOff));
   }
-
+  createHoliday(startDay: Moment, length: number, leaveCost: number): Holiday {
+    const format = "ddd, DD MMM";
+    return { startDay: moment(startDay).format(format).toString(), endDay: moment(startDay).add(length - 1, "days").format(format).toString(), leaveCost: leaveCost }
+  }
   calculateBestHolidays(desiredLength: number): Array<Holiday> {
     let bestHolidayList: Array<Holiday> = [];
     const a = moment('2020-01-01');
@@ -79,7 +91,8 @@ export default class HelloWorld extends Vue {
           leaveCost += 1;
         }
       }
-      const holiday = {startDay: m.format("ddd, MM YY").toString(), endDay: moment(m).add(desiredLength - 1, "days").format("ddd, MM YY").toString(), leaveCost: leaveCost};
+      
+      const holiday = this.createHoliday(m, desiredLength, leaveCost);
       if (leaveCost === minLeaveCost) {
           // add to list of equal best holiday options
           bestHolidayList.push(holiday);
@@ -99,6 +112,7 @@ export default class HelloWorld extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+
 h3 {
   margin: 40px 0 0;
 }
@@ -113,8 +127,71 @@ li {
 a {
   color: #42b983;
 }
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
+.inputField {
+  border-radius: 4px;
+  max-width: 450px;
+  height: 35px;
+  width: 80%;
+  box-sizing: border-box;
+  padding: 4px 8px; 
+  outline: none;
+}
+.inputField:focus {
+  border: 2px solid lightblue;
+}
+.calcButton {
+  border-radius: 4px;
+  max-width: 450px;
+  height: 35px;
+  width: 80%;
+  font-size: 15px;
+  background-color: #0c71e0;
+  color: white;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  margin-top: 15px;
+  outline: none;
+}
+.inputLabel {
+  padding-bottom: 4px;
+}
 .errorMessage {
   color: red;
   min-height: 30px;
+}
+.holidayItem {
+  padding: 10px;
+}
+.subtitle {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  size: 10px;
+}
+.holidayItemWrapper {
+  text-align: left;
+  border-radius: 12px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  margin: 20px;
+  width: 80%;
+  min-height: 160px;
+  max-width: 450px;
+  background-color: #fcfcfc;
+}
+.divider {
+  border: 0.5px solid grey;
+  width: 90%;
+  opacity: 0.2;
+  
 }
 </style>
