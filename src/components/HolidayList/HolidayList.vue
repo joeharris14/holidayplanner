@@ -1,6 +1,6 @@
 <template>
 <transition name="slide-fade">
-    <div class="holidayItemWrapper" v-show="bestHolidays.length > 0">
+    <div class="holidayItemWrapper" v-show="showCard">
       <div class="holidayItem" v-for="(holiday, index) in bestHolidays" :key="holiday.startDay"><b>{{ holiday.startDay }} - {{ holiday.endDay }}</b>
         <div class="subtitle"> {{ holiday.leaveCost }} days of annual leave</div>
         <hr class="divider" v-if="index+1 < bestHolidays.length" />
@@ -15,6 +15,11 @@ import { Component, Vue } from 'vue-property-decorator';
 export default class HolidayList extends Vue {
     get bestHolidays() {
       return this.$store.getters.bestHolidays;
+    }
+
+    get showCard() {
+      console.log("hello");
+      return this.$store.getters.showCard;
     }
 }
 </script>

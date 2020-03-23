@@ -8,6 +8,7 @@ export default new Vuex.Store({
     daysOff: [],
     bestHolidays: [],
     errorMessage: null,
+    showCard: false,
   },
   mutations: {
     setDaysOff(state, payload) {
@@ -18,6 +19,9 @@ export default new Vuex.Store({
     },
     setErrorMessage(state, payload) {
       Vue.set(state, "errorMessage", payload);
+    },
+    setShowCard(state, payload) {
+      Vue.set(state, "showCard", payload);
     }
   },
   actions: {
@@ -31,6 +35,9 @@ export default new Vuex.Store({
    },
    errorMessage(state) {
      return state.errorMessage;
+   },
+   showCard(state) {
+     return state.showCard;
    }
   },
   modules: {

@@ -1,10 +1,10 @@
 <template>
-  <div class="contentWrapper">
+  <div class="wrapper">
     <h1 class="header">Holiday Planner</h1>
     <p class="errorMessage">{{ errorMessage }}</p>
-    <div class="inputLabel"><p>How long is your vacation?</p></div>
+    <p class="inputLabel">How long is your vacation?</p>
     <input class="inputField" v-model="holidayLengthEntered" />
-    <select />
+    <div class="stateSelection"><div class="label">State: </div><vSelect class="select" :options="['NSW', 'QLD', 'TAS', 'ACT', 'VIC', 'SA', 'NT', 'WA']" /></div>
     <button class="calcButton" v-on:click="handleSubmitPress">Calculate best dates</button>
     <HolidayList />
   </div>
@@ -15,11 +15,14 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import moment, { Moment } from 'moment';
 import { Holiday } from '../../types';
 import HolidayList from '../HolidayList/HolidayList.vue';
+import vSelect from 'vue-select';
+import 'vue-select/dist/vue-select.css';
 import json from '../../assets/public_holidays.json';
 
 @Component({
   components: {
     HolidayList,
+    vSelect,
   },
 })
 export default class HolidayPlanner extends Vue {
@@ -46,9 +49,9 @@ export default class HolidayPlanner extends Vue {
   }
 
   @Watch('holidayLengthEntered') inputEntered() {
+    this.$store.commit('setShowCard', false);
     if (this.holidayLengthEntered.length === 0) {
       this.$store.commit('setErrorMessage', null);
-      this.$store.commit('setBestHolidays', []);
     }
     // If you want real time input validation
 
@@ -111,6 +114,7 @@ export default class HolidayPlanner extends Vue {
       this.$store.commit('setErrorMessage', null);
     }
     this.$store.commit('setBestHolidays', this.calculateBestHolidays(desiredLength));
+    this.$store.commit('setShowCard', true);
   }
 
   createHoliday(startDay: Moment, length: number, leaveCost: number): Holiday {
