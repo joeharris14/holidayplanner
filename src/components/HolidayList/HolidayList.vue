@@ -18,7 +18,6 @@ export default class HolidayList extends Vue {
     }
 
     get showCard() {
-      console.log("hello");
       return this.$store.getters.showCard;
     }
 }
