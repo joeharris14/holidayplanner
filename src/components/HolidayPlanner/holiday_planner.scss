@@ -1,0 +1,85 @@
+h3 {
+    margin: 40px 0 0;
+  }
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  li {
+    display: inline-block;
+    margin: 0 10px;
+  }
+  a {
+    color: #42b983;
+  }
+  .slide-fade-enter-active {
+    transition: all .3s ease;
+  }
+  .slide-fade-leave-active {
+    transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  }
+  .slide-fade-enter, .slide-fade-leave-to
+  /* .slide-fade-leave-active below version 2.1.8 */ {
+    transform: translateX(10px);
+    opacity: 0;
+  }
+  .inputField {
+    border-radius: 4px;
+    max-width: 450px;
+    height: 35px;
+    width: 100%;
+    font-size: 16px;
+    box-sizing: border-box;
+    padding: 4px 8px; 
+    outline: none;
+  }
+  .inputField:focus {
+    border: 2px solid lightblue;
+  }
+  .header {
+    text-align: center;
+  }
+  .calcButton {
+    border-radius: 4px;
+    max-width: 450px;
+    height: 35px;
+    width: 100%;
+    font-size: 15px;
+    background-color: #0c71e0;
+    color: white;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+    margin-top: 15px;
+    outline: none;
+  }
+  .inputLabel {
+    padding-bottom: 4px;
+  }
+  .errorMessage {
+    color: red;
+    min-height: 30px;
+  }
+  .holidayItem {
+    padding: 10px;
+  
+  }
+  .subtitle {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    size: 10px;
+  }
+  .holidayItemWrapper {
+    text-align: left;
+    max-width: 450px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    margin: 20px;
+    min-height: 160px;
+    background-color: #fcfcfc;
+  }
+  .divider {
+    border: 0.5px solid grey;
+    width: 90%;
+    opacity: 0.2;
+    
+  }
