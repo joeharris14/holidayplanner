@@ -15,6 +15,8 @@ import { Component, Vue, Watch } from 'vue-property-decorator';
 import moment, { Moment } from 'moment';
 import { Holiday } from '../../types';
 import HolidayList from '../HolidayList/HolidayList.vue';
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
 import vSelect from 'vue-select';
 import 'vue-select/dist/vue-select.css';
 import json from '../../assets/public_holidays.json';
