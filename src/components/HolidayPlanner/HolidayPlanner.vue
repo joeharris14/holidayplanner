@@ -15,7 +15,7 @@ import moment, { Moment } from 'moment';
 import { Holiday } from '../../types';
 import HolidayList from '../HolidayList/HolidayList.vue';
 import json from '../../assets/public_holidays.json';
-import { mapGetters } from 'vuex';
+
 @Component({
   components: {
     HolidayList,
@@ -30,7 +30,6 @@ export default class HolidayPlanner extends Vue {
     // If we wanted to display which holidays they are using then we could store this data too.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.$store.commit('setDaysOff', json.filter((dayOff: any) => dayOff.jurisdiction === "nsw").map((dayOff: any) => moment(dayOff.date, 'YYYYMMDD')));
-    console.log(this.$store.getters.daysOff);
   }
 
   get bestHolidays() {
