@@ -4,7 +4,7 @@
     <p class="errorMessage">{{ errorMessage }}</p>
     <p class="inputLabel">How long is your vacation?</p>
     <input class="inputField" v-model="holidayLengthEntered" />
-    <div class="stateSelection"><div class="label">State: </div><vSelect class="select" :options="['NSW', 'QLD', 'TAS', 'ACT', 'VIC', 'SA', 'NT', 'WA']" /></div>
+    <div class="stateSelection"><div class="label">State: </div><vSelect v-model="stateSelector" class="select" :options="['NSW', 'QLD', 'TAS', 'ACT', 'VIC', 'SA', 'NT', 'WA']" /></div>
     <button class="calcButton" v-on:click="handleSubmitPress">Calculate best dates</button>
     <HolidayList />
   </div>
@@ -27,14 +27,7 @@ import json from '../../assets/public_holidays.json';
 })
 export default class HolidayPlanner extends Vue {
   holidayLengthEntered = "";
-
-  mounted() {
-    // Normally I would define an interface for this but considering none of the other info
-    // is useful in this usecase I will leave it as any for simplicity.
-    // If we wanted to display which holidays they are using then we could store this data too.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    this.$store.commit('setDaysOff', json.filter((dayOff: any) => dayOff.jurisdiction === "nsw").map((dayOff: any) => moment(dayOff.date, 'YYYYMMDD')));
-  }
+  stateSelector = "";
 
   get bestHolidays() {
     return this.$store.getters.bestHolidays;
@@ -47,7 +40,13 @@ export default class HolidayPlanner extends Vue {
   get errorMessage() {
     return this.$store.getters.errorMessage;
   }
-
+  @Watch('stateSelector') stateSelected() {
+    // Normally I would define an interface for this but considering none of the other info
+    // is useful in this usecase I will leave it as any for simplicity.
+    // If we wanted to display which holidays they are using then we could store this data too.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    this.$store.commit('setDaysOff', json.filter((dayOff: any) => dayOff.jurisdiction === this.stateSelector.toLowerCase()).map((dayOff: any) => moment(dayOff.date, 'YYYYMMDD')));
+  }
   @Watch('holidayLengthEntered') inputEntered() {
     this.$store.commit('setShowCard', false);
     if (this.holidayLengthEntered.length === 0) {
